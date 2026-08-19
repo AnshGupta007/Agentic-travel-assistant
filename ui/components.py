@@ -1,13 +1,3 @@
-# Starlette compatibility patch for Streamlit
-try:
-    import starlette.middleware.gzip
-    if not hasattr(starlette.middleware.gzip, "DEFAULT_EXCLUDED_CONTENT_TYPES"):
-        starlette.middleware.gzip.DEFAULT_EXCLUDED_CONTENT_TYPES = (
-            "text/html", "text/css", "text/plain", "application/javascript", "application/json"
-        )
-except ImportError:
-    pass
-
 from typing import Callable, Optional
 import pandas as pd
 import streamlit as st

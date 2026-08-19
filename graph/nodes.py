@@ -136,7 +136,21 @@ def vector_search_node(state: TravelAgentState, vector_store=None) -> dict[str, 
 
 def web_search_node(state: TravelAgentState, search_service=None) -> dict[str, Any]:
     """Node: Retrieve city knowledge via Web Search fallback, with selective re-execution."""
-    city = state.get("city") or state.get("query") or "Unknown City"
+    # BUG-03 FIX: Guard against non-city queries. If city is None, do not search the raw
+    # query string as a city name — return a friendly conversational redirect instead.
+    city = state.get("city")
+    if city is None:
+        logger.info("[web_search_node] No city in state — returning friendly redirect for non-city query.")
+        return {
+            "city_summary": (
+                "I'm a travel assistant specializing in city destinations. "
+                "Please specify a city you'd like to explore — for example, "
+                "'Tell me about Tokyo' or 'Plan a trip to Paris'."
+            ),
+            "routed_to": "web_search",
+            "search_error": None,
+        }
+
     city_changed = state.get("city_changed", True)
     existing_summary = state.get("city_summary")
 
@@ -171,55 +185,6 @@ def web_search_node(state: TravelAgentState, search_service=None) -> dict[str, A
         "city_summary": f"Unable to retrieve web search results for {city}.",
         "routed_to": "web_search",
         "search_error": error_msg,
-    }
-
-
-def graph_rag_node(state: TravelAgentState, graph_service=None) -> dict[str, Any]:
-    """Node: Perform Knowledge Graph traversal and Graph RAG context retrieval."""
-    city = state.get("city") or "Tokyo"
-    query = state.get("query") or f"Tell me about {city}"
-    city_changed = state.get("city_changed", True)
-    existing_summary = state.get("city_summary")
-
-    if not city_changed and existing_summary:
-        logger.info(f"[graph_rag_node] Selective re-execution: Reusing existing city graph summary for '{city}'")
-        reused = list(state.get("reused_components") or [])
-        if "city_summary" not in reused:
-            reused.append("city_summary")
-        return {
-            "routed_to": "graph_rag",
-            "search_error": None,
-            "reused_components": reused,
-        }
-
-    logger.info(f"[graph_rag_node] Executing Graph RAG retrieval for city '{city}'")
-
-    provider = graph_service
-    if provider is None:
-        from services.knowledge_graph import KnowledgeGraphService
-        provider = KnowledgeGraphService()
-
-    try:
-        res = provider.query_graph(city, query)
-        if res:
-            return {
-                "city_summary": res.get("graph_context", f"Graph RAG summary for {city}"),
-                "graph_context": res.get("graph_context"),
-                "graph_entities": res.get("entities", []),
-                "graph_nodes": res.get("nodes", []),
-                "routed_to": "graph_rag",
-                "search_error": None,
-            }
-    except Exception as e:
-        logger.error(f"[graph_rag_node] Graph RAG service failed for '{city}': {e}")
-
-    error_msg = f"Graph RAG lookup failed for '{city}'."
-    return {
-        "city_summary": f"Unable to retrieve Knowledge Graph facts for {city}.",
-        "routed_to": "graph_rag",
-        "search_error": error_msg,
-        "graph_entities": [],
-        "graph_nodes": [],
     }
 
 

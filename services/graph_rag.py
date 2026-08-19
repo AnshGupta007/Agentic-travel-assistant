@@ -157,7 +157,8 @@ class GraphRAGService:
         # Construct combined summary
         graph_facts_summary = "; ".join(triples[:6]) if triples else f"No Knowledge Graph entries for {city}."
         if vector_text:
-            combined_summary = f"{vector_text} [Knowledge Graph Triples: {graph_facts_summary}]"
+            vector_desc = vector_text.description if hasattr(vector_text, "description") else str(vector_text)
+            combined_summary = f"{vector_desc} [Knowledge Graph Triples: {graph_facts_summary}]"
         else:
             combined_summary = f"Overview of {city}: {graph_facts_summary}"
 

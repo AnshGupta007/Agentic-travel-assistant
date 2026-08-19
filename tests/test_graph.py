@@ -68,6 +68,25 @@ def test_web_search_node_fallback():
     assert res["search_error"] is None
 
 
+def test_web_search_node_non_city_query():
+    """BUG-03 regression: web_search_node must not use raw query as a city name when city is None.
+    
+    Non-city conversational queries (e.g. 'Tell me a joke') should receive a
+    friendly redirect rather than triggering a bogus travel guide search.
+    """
+    for non_city_query in ["Tell me a joke", "What is this app?", "Hello!", "What is the meaning of life?"]:
+        state: TravelAgentState = {"query": non_city_query, "city": None, "city_changed": True}
+        result = web_search_node(state)
+        # Must NOT search for the raw query as a city
+        assert non_city_query not in result["city_summary"], (
+            f"BUG-03: web_search_node searched '{non_city_query}' as a city name"
+        )
+        # Must return a helpful travel redirect message
+        assert result["search_error"] is None
+        assert result["routed_to"] == "web_search"
+        assert "travel" in result["city_summary"].lower() or "destination" in result["city_summary"].lower() or "city" in result["city_summary"].lower()
+
+
 def test_weather_node():
     state: TravelAgentState = {"city": "Tokyo"}
     res = weather_node(state)

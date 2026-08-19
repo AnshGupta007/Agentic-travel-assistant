@@ -1,12 +1,17 @@
-# Starlette compatibility patch for Streamlit
-try:
-    import starlette.middleware.gzip
-    if not hasattr(starlette.middleware.gzip, "DEFAULT_EXCLUDED_CONTENT_TYPES"):
-        starlette.middleware.gzip.DEFAULT_EXCLUDED_CONTENT_TYPES = (
-            "text/html", "text/css", "text/plain", "application/javascript", "application/json"
-        )
-except ImportError:
-    pass
+def apply_compatibility_patches() -> None:
+    """Apply runtime compatibility patches required for Streamlit + Starlette co-existence.
+
+    Encapsulated as a function to avoid module-level side effects on import.
+    Must be called once inside main() before any Streamlit operations.
+    """
+    try:
+        import starlette.middleware.gzip
+        if not hasattr(starlette.middleware.gzip, "DEFAULT_EXCLUDED_CONTENT_TYPES"):
+            starlette.middleware.gzip.DEFAULT_EXCLUDED_CONTENT_TYPES = (
+                "text/html", "text/css", "text/plain", "application/javascript", "application/json"
+            )
+    except ImportError:
+        pass
 
 import logging
 import uuid
@@ -67,6 +72,9 @@ def clear_session() -> None:
 
 def main() -> None:
     """Main application loop for Streamlit UI."""
+    # 0. Apply compatibility patches (must run before Streamlit operations)
+    apply_compatibility_patches()
+
     # 1. Initialize Session State
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
