@@ -1,0 +1,18 @@
+{
+    "city": "New York",
+    "country": "United States",
+    "description": "New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean. At its core is Manhattan, a densely populated borough that's among the world's major commercial, financial, and cultural centers.",
+    "highlights": [
+        "Statue of Liberty & Ellis Island",
+        "Central Park",
+        "Times Square & Broadway",
+        "Empire State Building",
+        "Metropolitan Museum of Art"
+    ],
+    "culture_tips": [
+        "Tipping 18-20% is expected at restaurants and bars.",
+        "Walk briskly and stay to the right on sidewalks.",
+        "Use the 24/7 Subway system for fast travel across boroughs."
+    ],
+    "source": "vector_store"
+}

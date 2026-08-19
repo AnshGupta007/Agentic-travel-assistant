@@ -1,0 +1,18 @@
+{
+    "city": "Tokyo",
+    "country": "Japan",
+    "description": "Tokyo, Japan's bustling capital, mixes ultra-modern skyscrapers and neon-lit streets with historic temples and gardens. It is world-renowned for its culinary scene, safety, efficient transit, and distinct neighborhood cultures.",
+    "highlights": [
+        "Senso-ji Temple in Asakusa",
+        "Tokyo Skytree and Tokyo Tower",
+        "Shibuya Crossing",
+        "Meiji Jingu Shrine",
+        "Akihabara Electric Town"
+    ],
+    "culture_tips": [
+        "Avoid walking while eating; eat near food stands or dining areas.",
+        "Keep trash until you find a trash bin or return to your hotel, as public bins are rare.",
+        "Queue orderly when boarding trains and keep noise levels low."
+    ],
+    "source": "vector_store"
+}

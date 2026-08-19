@@ -1,0 +1,18 @@
+{
+    "city": "Kyoto",
+    "country": "Japan",
+    "description": "Kyoto, once the imperial capital of Japan, is famous for its numerous classical Buddhist temples, gardens, imperial palaces, Shinto shrines, and traditional wooden houses.",
+    "highlights": [
+        "Fushimi Inari Shrine",
+        "Kinkaku-ji (Golden Pavilion)",
+        "Arashiyama Bamboo Grove",
+        "Gion District",
+        "Kiyomizu-dera Temple"
+    ],
+    "culture_tips": [
+        "Respect geiko and maiko in Gion; do not photograph without permission.",
+        "Remove shoes when entering temples or traditional ryokans.",
+        "Keep quiet on public buses and trains."
+    ],
+    "source": "vector_store"
+}
